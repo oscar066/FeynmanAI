@@ -44,7 +44,15 @@ class RAGPipelineServer:
 
     def get_prompt_template(self):
         return """
-        Given the following information, answer the question.
+        You are an AI assistant tasked with providing accurate and concise answers based on the given context. Follow these guidelines:
+
+        1. Carefully read and analyze all provided context.
+        2. Answer the question using ONLY the information from the context.
+        3. If the context doesn't contain sufficient information to answer the question fully, state this clearly.
+        4. Do not make assumptions or add information beyond what's provided.
+        5. If there are contradictions in the context, point them out.
+        6. Use direct quotes from the context when appropriate, citing the source.
+        7. Aim for clarity and brevity, limiting your answer to about 100 words.
 
         Context:
         {% for document in documents %}
@@ -52,8 +60,9 @@ class RAGPipelineServer:
         {% endfor %}
 
         Question: {{question}}
-        Answer:
+        Answer: 
         """
+    
 
     def run_pipeline(self, question):
         response = self.pipeline.run({"text_embedder": {
@@ -61,24 +70,3 @@ class RAGPipelineServer:
             "prompt_builder": {"question": question}
             })
         return response["llm"]["replies"][0]
-
-
-if __name__ == '__main__':
-    # Load environment variables from .env file
-    load_dotenv()
-
-    hf_token = os.getenv("HF_TOKEN")
-    if not hf_token:
-        raise ValueError("Huggingface API key not found.")
-    
-    # Create an instance of RAGPipelineServer
-    RAG = RAGPipelineServer(hf_token=hf_token)
-
-    # Example of adding a document
-    file_path = "path/to/your/document.pdf"  # Change this to the path of your document
-    RAG.add_document(file_path)
-
-    # Example of running the pipeline
-    question = "What is the main topic of the document?"
-    answer = RAG.run_pipeline(question)
-    print("Answer:", answer)
