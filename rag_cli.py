@@ -1,69 +1,99 @@
 # rag_cli.py
-
 import argparse
 import os
 from dotenv import load_dotenv
-from CacheRAG import CachedRAGPipeline
+from RAGPipeline import RAGPipeline
 from Spinner import Spinner
-from utils import format_answer, clear_terminal
+from utils import format_answer, clear_terminal, load_environment
+from colorama import Fore, Style, init
+import warnings
+import random
+
+# Initialize colorama
+init(autoreset=True)
+
+warnings.filterwarnings("ignore", 
+                        category=FutureWarning, 
+                        message="The `use_auth_token` argument is deprecated")
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="RAG Command-Line Tool with Caching")
+    parser.add_argument("-d", "--document", help="Path to the document file")
+    parser.add_argument("-cls","--clear", action="store_true",  help="Clear screen after each query")
+    parser.add_argument("-qz", "--quiz",  action="store_true",  help="Quiz me based on my documents(Quiz Mode)")
+    parser.add_argument("-rd", "--read",  action="store_true",  help="Reads the Answer for you")
+    return parser.parse_args()
+
+def interactive_query_loop(rag, clear_screen):
+    """Interactive loop for querying the RAG model."""
+    while True:
+        question = input(f"\n{Fore.GREEN}Enter your question (or 'quit' to exit, 'clear' to clear screen):{Style.RESET_ALL} \n")
+        if question.lower() == 'quit':
+            break
+        elif question.lower() == 'clear':
+            clear_terminal()
+            continue
+
+        with Spinner("Processing your question"):
+            answer = rag.run_pipeline(question, mode="answer")
+        
+        formatted_answer = format_answer(answer)
+        print(f"\n{Fore.BLUE}Answer:{Style.RESET_ALL}")
+        print(formatted_answer)
+
+        if clear_screen:
+            input(f"{Fore.YELLOW}Press Enter to clear the screen...{Style.RESET_ALL}")
+            clear_terminal()
+
+def quiz_mode(rag, clear_screen):
+    # Quiz mode for testing User's Knowledge
+    print(f"{Fore.CYAN}Entering Quiz Mode. Type 'quit' to exit quiz mode.{Style.RESET_ALL}")
+
+    while True:
+        topics = rag.get_document_topics()
+        topic = random.choice(topics)
+
+        with Spinner("Generating Questions"):
+            question = rag.run_pipeline(topic, mode="quiz")
+
+        print(f"\n{Fore.GREEN}Question:{Style.RESET_ALL} {question}")
+        user_answer = input(f"{Fore.YELLOW}Your answer:{Style.RESET_ALL} ")
+
+        if user_answer.lower() == 'quit':
+            break
+
+        with Spinner("Evaluating answer"):
+            feedback = rag.run_pipeline(f"{question}|||{user_answer}", mode="evaluate")
+
+        print(f"\n{Fore.BLUE}Feedback:{Style.RESET_ALL}")
+        print(format_answer(feedback))
+        
+        if clear_screen:
+            input(f"{Fore.YELLOW}Press Enter to continue...{Style.RESET_ALL}")
+            clear_terminal()
 
 def main():
-    parser = argparse.ArgumentParser(description="RAG Command-Line Tool with Caching")
-    parser.add_argument("--document", help="Path to the document file")
-    parser.add_argument("--list-cache", action="store_true", help="List cached documents")
-    parser.add_argument("--clear-cache", action="store_true", help="Clear the document cache")
-    args = parser.parse_args()
-
-    # Load environment variables from .env file
-    load_dotenv()
-
-    hf_token = os.getenv("HF_TOKEN")
-    if not hf_token:
-        raise ValueError("Huggingface API key not found. Please set the HF_TOKEN environment variable.")
+    """Main function to run the script."""
+    args = parse_arguments()
+    hf_token = load_environment()
 
     try:
-        # Create an instance of CachedRAGPipeline
-        rag = CachedRAGPipeline(hf_token=hf_token)
-
-        if args.list_cache:
-            with Spinner("Fetching cached documents"):
-                cached_docs = rag.list_cached_documents()
-            if cached_docs:
-                print("Cached documents:")
-                for doc in cached_docs:
-                    print(f"- {doc}")
-            else:
-                print("No documents in cache.")
-            return
-
-        if args.clear_cache:
-            with Spinner("Clearing cache"):
-                rag.clear_cache()
-            return
+        rag = RAGPipeline(hf_token=hf_token)
 
         if args.document:
             with Spinner(f"Adding document '{args.document}'"):
                 rag.add_document(args.document)
 
-        # Interactive query loop
-        while True:
-            question = input("\nEnter your question (or 'quit' to exit): ")
-            if question.lower() == 'quit':
-                break
-
-            with Spinner("Processing your question"):
-                answer = rag.run_pipeline(question)
-            
-            formatted_answer = format_answer(answer)
-            print("\nAnswer:")
-            print(formatted_answer)
+        if args.quiz:
+            quiz_mode(rag, args.clear)
+        else:
+            interactive_query_loop(rag, args.clear)
 
     except AttributeError as e:
-        print(f"Error: {str(e)}")
+        print(f"{Fore.RED}Error:{Style.RESET_ALL} {str(e)}")
         print("This might be due to an incompatibility with the current version of Haystack.")
-        print("Please check the documentation or update the Haystack library.")
     except Exception as e:
-        print(f"An unexpected error occurred: {str(e)}")
+        print(f"{Fore.RED}An unexpected error occurred:{Style.RESET_ALL} {str(e)}")
 
 if __name__ == "__main__":
     main()
