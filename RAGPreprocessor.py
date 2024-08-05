@@ -18,6 +18,20 @@ RESET = "\033[0m"
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class RAGPreprocessor:
+    """
+    A Preprocessor class for Retrieval-Augmented Generation (RAG) that handles various document formats:
+
+    This class provides functionality to convert, clean and split documents from different file formats
+    ie (PDF, DOCX, PPTX, TXT) into a list of Haystack Document objects .
+
+    Methods:
+        detect_format(file_path): Detect the format of a given file.
+        process_file (file_path): Processes a file , converting it to a Documents , cleaning and splitting.
+        process_text (file_path): Processes a text string , cleaning and splitting it into Documents. 
+
+    Returns:
+        List[Document]: A list of processed Haystack Document objects.   
+    """
     def __init__(self):
         self.converters = {
             '.pdf': PyPDFToDocument(),
