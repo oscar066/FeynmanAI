@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="FeynmanAi",
-    version="0.1.0",
+    version="0.1.2",
     description="A command-line tool for using RAG model on Local documents",
     long_description=long_description,
     long_description_content_type="text/markdown",
