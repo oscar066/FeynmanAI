@@ -1,1 +1,11 @@
+# Build environments 
 .env
+
+# package 
+dist
+FeynmanAi.egg-info
+
+# python 
+__pycache__
+
+
