@@ -1,6 +1,6 @@
-# FeynmanAi
+# FeynmanAI
 
-FeynmanAi is a powerful command-line tool that leverages the Retrieval-Augmented Generation (RAG) model to interact with local documents. Whether you want to query your documents for specific information or quiz yourself on the contents, FeynmanAi offers an intuitive interface to get answers and enhance your understanding.
+FeynmanAI is a powerful command-line tool that leverages the Retrieval-Augmented Generation (RAG) model to interact with local documents. Whether you want to query your documents for specific information or quiz yourself on the contents, FeynmanAi offers an intuitive interface to get answers and enhance your understanding.
 
 ## Features
 
@@ -14,12 +14,12 @@ FeynmanAi is a powerful command-line tool that leverages the Retrieval-Augmented
 You can install FeynmanAi using pip:
 
 ```bash
-pip install FeynmanAi
+pip install FeynmanAI
 ```
 
 ## Usage
 
-The `FeynmanAi` package provides a command-line interface (CLI) that you can use to interact with the RAG model and your Local documents.
+The `FeynmanAI` package provides a command-line interface (CLI) that you can use to interact with the RAG model and your Local documents.
 
 ### Interactive Query Loop
 
@@ -28,7 +28,7 @@ To start the interactive query loop, run the following command:
 You can use either `-d` or `--document` flag:
 
 ```bash
-FeynmanAi -d /path/to/your/document.pdf 
+FeynmanAI -d /path/to/your/document.pdf 
 ```
 
 #### Example :
@@ -36,7 +36,7 @@ FeynmanAi -d /path/to/your/document.pdf
 The package includes sample documents to get you started :
 
 ```bash
-FeynmanAi -d Sample_documents/Distributed.pdf
+FeynmanAI -d Sample_documents/Distributed.pdf
 ```
 This command will load the specified document into the model's knowledge base and initiate the interactive query loop. In this mode, you can ask questions and receive answers derived from the loaded documents. Available commands include:
 
@@ -55,12 +55,12 @@ To exit quiz mode, type `'quit'`.
 #### Example 
 
 ```bash 
-FeymanAi -d Sample_documents/Distributed.pdf -qz
+FeynmanAI -d Sample_documents/Distributed.pdf -qz
 ```
 
 ### Other Options
 
-The `FeynmanAi` package also provides the following additional options:
+The `FeynmanAI` package also provides the following additional options:
 
 - `-cls` or `--clear`: Clear the screen after each query in the interactive mode.
 - `-rd` or `--read`: Read the answer out loud (requires text-to-speech capabilities on your system).
