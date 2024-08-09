@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as fh:
+with open("../README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="FeynmanAi",
-    version="0.1.2",
+    name="FeynmanAI",
+    version="0.1.3",
     description="A command-line tool for using RAG model on Local documents",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -31,7 +31,7 @@ setup(
 
     entry_points={
         "console_scripts" : [
-            "FeynmanAi=rag_cli:main"
+            "FeynmanAI=FeynmanAI.rag_cli:main"
         ]
     },
 
