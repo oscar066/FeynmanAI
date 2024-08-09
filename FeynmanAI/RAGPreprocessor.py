@@ -6,8 +6,8 @@ from haystack.components.preprocessors import DocumentCleaner, DocumentSplitter
 from typing import List, Union, Dict, Any, Optional
 from pathlib import Path
 
-from PPTXToDocument import CustomPPTXToDocument
-from DOCXToDocument import CustomDOCXToDocument
+from .PPTXToDocument import CustomPPTXToDocument
+from .DOCXToDocument import CustomDOCXToDocument
 
 # ANSI escape codes for colors
 RED = "\033[31m"

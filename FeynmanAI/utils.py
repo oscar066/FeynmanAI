@@ -4,6 +4,9 @@ import platform
 import textwrap
 import shutil
 from dotenv import load_dotenv
+from colorama import Fore, Style ,init
+
+init(autoreset=True)
 
 def clear_terminal():
     if platform.system() == "Windows":
@@ -65,6 +68,22 @@ def format_answer(answer: str) -> str:
 def load_environment():
     load_dotenv()
     hf_token = os.getenv("HF_TOKEN")
+
     if not hf_token:
-        raise ValueError("Huggingface API key not found. Please set the HF_TOKEN environment variable.")
+        print(f"{Fore.YELLOW}Huggingface Access token not found.{Style.RESET_ALL}")
+        hf_token = input(f"{Fore.CYAN}Please enter your HuggingFace access token: {Style.RESET_ALL}")
+
+        if hf_token:
+            save_token = input(f"{Fore.GREEN}Do you want to save this token for future use? (y/n): {Style.RESET_ALL}")
+            if save_token.lower() == 'y':
+                with open(".env", "a") as f:
+                    f.write(f"\nHF_TOKEN={hf_token}")
+                print(f"{Fore.GREEN}Token Saved in .env file.{Style.RESET_ALL}")
+
+            else:
+                print(f"{Fore.YELLOW}Token not saved. You will need to enter it again next time. {Style.RESET_ALL}")
+
+    else:
+        print(f"{Fore.GREEN}Using Huggingface access token from .env file.{Style.RESET_ALL}")
+
     return hf_token

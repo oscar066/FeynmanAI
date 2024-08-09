@@ -7,10 +7,13 @@ from haystack.components.retrievers.in_memory import InMemoryEmbeddingRetriever
 from haystack.components.builders import PromptBuilder
 from haystack.components.generators import HuggingFaceAPIGenerator
 from haystack.utils import Secret
-from RAGPreprocessor import RAGPreprocessor
+
+from .RAGPreprocessor import RAGPreprocessor
+from .PromptTemplates import PromptTemplates
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
-from PromptTemplates import PromptTemplates
+
 
 class RAGPipeline:
     """

@@ -1,13 +1,12 @@
 # rag_cli.py
-import argparse
 import os
-from dotenv import load_dotenv
-from RAGPipeline import RAGPipeline
-from Spinner import Spinner
-from utils import format_answer, clear_terminal, load_environment
-from colorama import Fore, Style, init
-import warnings
 import random
+import argparse
+import warnings
+from colorama import Fore, Style, init
+from .RAGPipeline import RAGPipeline
+from .Spinner import Spinner
+from .utils import format_answer, clear_terminal, load_environment
 
 # Initialize colorama
 init(autoreset=True)
@@ -17,11 +16,12 @@ warnings.filterwarnings("ignore",
                         message="The `use_auth_token` argument is deprecated")
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="RAG Command-Line Tool with Caching")
+    parser = argparse.ArgumentParser(description="RAG Command-Line Tool for Local Documents")
     parser.add_argument("-d", "--document", help="Path to the document file")
-    parser.add_argument("-cls","--clear", action="store_true",  help="Clear screen after each query")
-    parser.add_argument("-qz", "--quiz",  action="store_true",  help="Quiz me based on my documents(Quiz Mode)")
-    parser.add_argument("-rd", "--read",  action="store_true",  help="Reads the Answer for you")
+    parser.add_argument("-cls","--clear",  action="store_true",  help="Clear screen after each query")
+    parser.add_argument("-qz", "--quiz",   action="store_true",  help="Quiz me based on my documents(Quiz Mode)")
+    parser.add_argument("-rd", "--read",   action="store_true",  help="Reads the Answer for you")
+    parser.add_argument("-v", "--version", action="version",     version="RAG CLI Tool 1.0.0")
     return parser.parse_args()
 
 def interactive_query_loop(rag, clear_screen):
