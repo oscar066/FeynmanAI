@@ -4,9 +4,13 @@ import random
 import argparse
 import warnings
 from colorama import Fore, Style, init
-from .RAGPipeline import RAGPipeline
-from .Spinner import Spinner
-from .utils import format_answer, clear_terminal, load_environment
+# from .RAGPipeline import RAGPipeline
+# from .Spinner import Spinner
+# from .utils import format_answer, clear_terminal, load_environment
+
+from FeynmanAI.RAGPipeline import RAGPipeline
+from FeynmanAI.Spinner import Spinner
+from FeynmanAI.utils import format_answer, clear_terminal, load_environment
 
 # Initialize colorama
 init(autoreset=True)
